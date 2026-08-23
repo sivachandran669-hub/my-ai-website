@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger — Your AI Cofounder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#171B22;
+    --ink-soft:#2A2F3A;
+    --stone:#E7E3D8;
+    --paper:#F4F1E7;
+    --gold:#D3A34C;
+    --teal:#2F6F5E;
+    --rust:#B4552F;
+    --line: rgba(23,27,34,0.14);
+    --line-light: rgba(244,241,231,0.18);
+    --max: 1120px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 32px;}
+  img,svg{display:block;}
+  ::selection{background:var(--gold); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--rust); outline-offset:3px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(244,241,231,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 32px; max-width:var(--max); margin:0 auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces', serif; font-weight:700; font-size:1.25rem;
+  }
+  .brand .mark{
+    width:26px; height:26px; border-radius:3px;
+    background:var(--ink);
+    position:relative;
+  }
+  .brand .mark::after{
+    content:'';
+    position:absolute; inset:6px 6px 6px 6px;
+    border:1.5px solid var(--gold);
+  }
+  .nav-links{display:flex; gap:36px; font-size:0.94rem;}
+  .nav-links a{text-decoration:none; opacity:0.75; transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-cta{
+    font-size:0.88rem; font-weight:600;
+    background:var(--ink); color:var(--paper);
+    padding:10px 20px; border-radius:2px;
+    text-decoration:none;
+    transition:transform .15s ease, background .2s;
+    display:inline-block;
+  }
+  .nav-cta:hover{background:var(--rust);}
+  .nav-mobile-hide{display:flex;}
+  @media (max-width:760px){ .nav-mobile-hide{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 96px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{
+    display:grid; grid-template-columns: 1.1fr 1fr; gap:64px; align-items:center;
+  }
+  @media (max-width:900px){ .hero .wrap{grid-template-columns:1fr;} }
+
+  .eyebrow{
+    font-size:0.78rem; text-transform:uppercase;
+    color:var(--rust); font-weight:600; letter-spacing:0.12em;
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:''; width:26px; height:1px; background:var(--rust);
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    margin-bottom:24px;
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--teal);
+  }
+  .hero p.lede{
+    font-size:1.13rem; color:var(--ink-soft); max-width:46ch; margin-bottom:36px;
+  }
+  .hero-ctas{display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--ink); color:var(--paper);
+    padding:15px 28px; border-radius:2px; text-decoration:none;
+    font-weight:600; font-size:0.96rem;
+    display:inline-flex; align-items:center; gap:10px;
+    transition:background .2s, transform .15s;
+  }
+  .btn-primary:hover{background:var(--rust); transform:translateY(-1px);}
+  .btn-ghost{
+    text-decoration:none; font-weight:600; font-size:0.96rem;
+    color:var(--ink); border-bottom:1.5px solid var(--ink);
+    padding-bottom:2px;
+  }
+  .hero-note{
+    margin-top:22px; font-size:0.82rem; color:var(--ink-soft); opacity:0.75;
+  }
+
+  /* ---------- Ledger dialogue mock ---------- */
+  .ledger{
+    background:var(--ink); color:var(--paper);
+    border-radius:6px; padding:26px;
+    box-shadow: 0 30px 60px -20px rgba(23,27,34,0.35);
+    position:relative;
+  }
+  .ledger-head{
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid var(--line-light);
+    padding-bottom:14px; margin-bottom:18px;
+    font-size:0.75rem; opacity:0.65;
+  }
+  .dot-row{display:flex; gap:6px;}
+  .dot-row span{width:7px; height:7px; border-radius:50%; background:var(--line-light);}
+  .bubble{
+    padding:14px 16px; border-radius:5px; margin-bottom:14px;
+    font-size:0.92rem; max-width:88%;
+    opacity:0; transform:translateY(8px);
+    animation:rise .55s ease forwards;
+  }
+  .bubble.founder{
+    background:var(--ink-soft);
+    margin-left:auto;
+    animation-delay:.15s;
+  }
+  .bubble.ai{
+    background:var(--paper); color:var(--ink);
+    animation-delay:.7s;
+  }
+  .bubble .label{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:0.66rem;
+    text-transform:uppercase; letter-spacing:0.08em; opacity:0.6; margin-bottom:6px;
+  }
+  .bubble.ai .label{color:var(--teal); opacity:1;}
+  @keyframes rise{ to{opacity:1; transform:translateY(0);} }
+  .typing{
+    display:inline-flex; gap:4px; padding:14px 16px;
+    background:var(--paper); border-radius:5px; width:fit-content;
+    opacity:0; animation:rise .5s ease forwards; animation-delay:1.3s;
+  }
+  .typing span{
+    width:5px; height:5px; border-radius:50%; background:var(--ink);
+    opacity:0.4; animation:blink 1.3s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){animation-delay:.15s;}
+  .typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes blink{ 0%,80%,100%{opacity:0.25;} 40%{opacity:0.9;} }
+  @media (prefers-reduced-motion: reduce){
+    .bubble, .typing{animation:none; opacity:1; transform:none;}
+  }
+
+  /* ---------- Trust strip ---------- */
+  .trust{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+  }
+  .trust .wrap{
+    display:flex; flex-wrap:wrap; gap:14px 40px; align-items:center;
+    justify-content:space-between;
+  }
+  .trust-item{
+    font-size:0.82rem; color:var(--ink-soft); opacity:0.7;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* ---------- Section framing ---------- */
+  section{padding:100px 0;}
+  .section-head{max-width:640px; margin-bottom:64px;}
+  .section-head .eyebrow{margin-bottom:18px;}
+  .section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.6rem); margin-bottom:16px;}
+  .section-head p{color:var(--ink-soft); font-size:1.03rem;}
+
+  /* ---------- How it works: real sequence, numbering justified ---------- */
+  .steps{
+    border-top:1px solid var(--line);
+  }
+  .step{
+    display:grid; grid-template-columns: 90px 1fr 1fr;
+    gap:40px; padding:38px 0;
+    border-bottom:1px solid var(--line);
+    align-items:start;
+  }
+  @media (max-width:800px){ .step{grid-template-columns:60px 1fr; } .step .step-desc{grid-column:2;} }
+  .step-num{
+    font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:var(--rust); padding-top:4px;
+  }
+  .step h3{font-size:1.3rem; margin-bottom:10px;}
+  .step p{color:var(--ink-soft); font-size:0.98rem; max-width:38ch;}
+
+  /* ---------- Feature grid ---------- */
+  .features{background:var(--ink); color:var(--paper);}
+  .features .section-head p{color:rgba(244,241,231,0.72);}
+  .features .eyebrow{color:var(--gold);}
+  .features .eyebrow::before{background:var(--gold);}
+  .feature-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;
+    background:var(--line-light);
+    border:1px solid var(--line-light);
+  }
+  @media (max-width:860px){ .feature-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .feature-grid{grid-template-columns:1fr;} }
+  .feature{
+    background:var(--ink); padding:34px 28px;
+    transition:background .25s;
+  }
+  .feature:hover{background:var(--ink-soft);}
+  .feature .ficon{
+    width:34px; height:34px; margin-bottom:20px;
+  }
+  .feature h3{font-size:1.08rem; margin-bottom:10px; font-weight:600; font-family:'IBM Plex Sans',sans-serif;}
+  .feature p{font-size:0.9rem; color:rgba(244,241,231,0.65);}
+
+  /* ---------- Quote ---------- */
+  .quote-section .wrap{
+    max-width:780px; text-align:center;
+  }
+  blockquote{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500;
+    font-size:clamp(1.4rem, 2.6vw, 1.9rem); line-height:1.4;
+    color:var(--ink);
+  }
+  .quote-attr{
+    margin-top:26px; font-size:0.88rem; color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  /* ---------- Pricing / CTA ---------- */
+  .pricing{border-top:1px solid var(--line);}
+  .price-card{
+    background:var(--stone);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:52px 48px;
+    display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;
+  }
+  @media (max-width:760px){ .price-card{grid-template-columns:1fr; text-align:left;} }
+  .price-card h3{font-size:1.7rem; margin-bottom:10px;}
+  .price-card p{color:var(--ink-soft); max-width:44ch;}
+  .price-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--teal);
+    display:inline-block; margin-bottom:8px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:48px 0 40px; border-top:1px solid var(--line);
+  }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+  }
+  .foot-links{display:flex; gap:28px; font-size:0.85rem; opacity:0.7;}
+  .foot-links a{text-decoration:none;}
+  .foot-links a:hover{text-decoration:underline;}
+  .copyright{font-size:0.8rem; opacity:0.55; font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand"><span class="mark"></span>Ledger</div>
+    <div class="nav-links nav-mobile-hide">
+      <a href="#how">How it works</a>
+      <a href="#features">Capabilities</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <a class="nav-cta" href="#pricing">Start free</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow mono">AI Cofounder — Private Beta</div>
+      <h1>The cofounder who <em>never forgets</em> a decision you made.</h1>
+      <p class="lede">Ledger sits in on every call, remembers every pivot, and turns scattered founder notes into a business that runs itself forward — for solo founders who can't afford to drop the thread.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#pricing">Start building — free →</a>
+        <a class="btn-ghost" href="#how">See how it works</a>
+      </div>
+      <p class="hero-note">No credit card. Your first business plan in under 10 minutes.</p>
+    </div>
+
+    <div class="ledger">
+      <div class="ledger-head">
+        <span class="mono">SESSION — TODAY, 14:02</span>
+        <div class="dot-row"><span></span><span></span><span></span></div>
+      </div>
+      <div class="bubble founder">
+        <span class="label">You</span>
+        We're losing customers after the free trial. Not sure if it's pricing or onboarding.
+      </div>
+      <div class="bubble ai">
+        <span class="label">Ledger</span>
+        Pulled your last 3 sessions — you changed onboarding copy on the 12th, drop-off started the 14th. Let's test pricing before touching copy again. Here's a 2-week plan.
+      </div>
+      <div class="typing"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap">
+    <span class="trust-item">BUILT FOR SOLO FOUNDERS</span>
+    <span class="trust-item">FREE TO START</span>
+    <span class="trust-item">REMEMBERS EVERY SESSION</span>
+    <span class="trust-item">EXPORTS REAL DOCUMENTS</span>
+  </div>
+</div>
+
+<section id="how" class="steps">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Onboarding sequence</div>
+      <h2>Three conversations before Ledger sounds like your cofounder.</h2>
+      <p>This is the actual order it happens in — each step feeds context into the next, so skipping ahead just means more back-and-forth later.</p>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div>
+        <h3>Tell it where the business stands</h3>
+      </div>
+      <div class="step-desc">
+        <p>Stage, revenue, team size, the goal for the next quarter. Ledger builds a working profile instead of asking generic questions later.</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div>
+        <h3>Point it at your existing tools</h3>
+      </div>
+      <div class="step-desc">
+        <p>Connect a doc, a spreadsheet, or just paste your notes. Ledger reads what already exists rather than making you re-explain your business from scratch.</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div>
+        <h3>Ask the question you're actually stuck on</h3>
+      </div>
+      <div class="step-desc">
+        <p>Pricing, hiring, a slipping launch date — whatever's live right now. Every answer after this one carries the memory of everything before it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Capabilities</div>
+      <h2>More than a chat window.</h2>
+      <p>Alippo-style assistants stop at conversation. Ledger acts on what you decide.</p>
+    </div>
+    <div class="feature-grid reveal">
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><rect x="3" y="3" width="28" height="28" rx="2" stroke="#D3A34C" stroke-width="1.5"/><path d="M9 17h16M9 11h10M9 23h13" stroke="#D3A34C" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <h3>Standing memory</h3>
+        <p>Every decision, metric, and rejected idea is retrievable — Ledger references last month's conversation without being asked to.</p>
+      </div>
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#D3A34C" stroke-width="1.5"/><path d="M17 10v7l5 3" stroke="#D3A34C" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <h3>Proactive nudges</h3>
+        <p>Ledger surfaces what needs attention before you ask — a stalled metric, an overdue follow-up, a pattern in your own notes.</p>
+      </div>
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><path d="M8 26V8h13l5 5v13H8z" stroke="#D3A34C" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 17h8M13 21h8" stroke="#D3A34C" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <h3>Real deliverables</h3>
+        <p>Pitch decks, pricing models, GTM plans — exported as documents you can send, not chat text you have to reformat yourself.</p>
+      </div>
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><path d="M6 24l6-12 6 8 4-6 6 10" stroke="#D3A34C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Usage insight</h3>
+        <p>See which parts of your business you keep circling back to — a signal worth acting on, not just a log of past chats.</p>
+      </div>
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><rect x="5" y="9" width="24" height="17" rx="2" stroke="#D3A34C" stroke-width="1.5"/><path d="M5 14h24" stroke="#D3A34C" stroke-width="1.5"/><circle cx="10" cy="11.5" r="0.8" fill="#D3A34C"/></svg>
+        <h3>Model choice</h3>
+        <p>Route quick questions to a fast model and hard strategic calls to a deeper one — you control the cost-for-depth trade-off.</p>
+      </div>
+      <div class="feature">
+        <svg class="ficon" viewBox="0 0 34 34" fill="none"><path d="M17 4l4 8 9 1-6.5 6.5L25 28l-8-4.5L9 28l1.5-8.5L4 13l9-1 4-8z" stroke="#D3A34C" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <h3>Stage-aware advice</h3>
+        <p>A pre-seed founder and a bootstrapped solopreneur get different playbooks — Ledger adjusts what it recommends to where you actually are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-section">
+  <div class="wrap reveal">
+    <blockquote>"I stopped re-explaining my business every time I opened a chat. It just knew where we'd left off — like an actual cofounder would."</blockquote>
+    <div class="quote-attr">— EARLY ACCESS FOUNDER, D2C RETAIL</div>
+  </div>
+</section>
+
+<section id="pricing" class="pricing">
+  <div class="wrap reveal">
+    <div class="price-card">
+      <div>
+        <span class="price-tag">● FREE DURING BETA</span>
+        <h3>Bring your business. Start today.</h3>
+        <p>Full access to memory, document exports, and proactive nudges — no seat limits, no card required while we're in beta.</p>
+      </div>
+      <a class="btn-primary" href="#">Create your account →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="font-size:1.05rem;"><span class="mark" style="width:20px;height:20px;"></span>Ledger</div>
+    <div class="foot-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Capabilities</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="copyright">© 2026 Ledger. Built for founders who forget less.</div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
